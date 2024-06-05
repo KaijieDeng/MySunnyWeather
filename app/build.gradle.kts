@@ -17,6 +17,15 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+
+    signingConfigs {
+        create("release") {
+            storeFile = file("C:\\Users\\dkj\\Desktop")
+            storePassword ="dkj1477865541"
+            keyAlias = "dkjdev"
+            keyPassword = "dkj1477865541"
+        }
+    }
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -24,6 +33,9 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+        }
+        getByName("release") {
+            signingConfig = signingConfigs.getByName("release")
         }
     }
     compileOptions {

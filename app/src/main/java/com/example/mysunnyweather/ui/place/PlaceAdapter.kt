@@ -33,13 +33,8 @@ class PlaceAdapter(private val fragment: PlaceFragment, private val placeList: L
                 activty.viewModel.placeName = place.name
                 activty.refreshWeather()
             }else{
-                val intent = Intent(parent.context,WeatherActivity::class.java).apply {
-                    putExtra("location_lng",place.location.lng)
-                    putExtra("location_lat",place.location.lat)
-                    putExtra("place_name",place.name)
-                }
                 fragment.viewModel.savePlace(place)
-                fragment.startActivity(intent)
+                WeatherActivity.startAction(fragment.requireContext(),place.location.lng,place.location.lat,place.name)
                 fragment.activity?.finish()
             }
             fragment.viewModel.savePlace(place)

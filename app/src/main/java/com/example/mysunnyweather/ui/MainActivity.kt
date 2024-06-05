@@ -5,12 +5,18 @@ import android.os.Bundle
 import androidx.databinding.DataBindingUtil
 import com.example.mysunnyweather.R
 import com.example.mysunnyweather.databinding.ActivityMainBinding
+import com.example.mysunnyweather.ui.viewmodel.MainViewModel
+import kotlin.reflect.KClass
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseActivity<MainViewModel,ActivityMainBinding>() {
+    override val viewModelClass: KClass<MainViewModel>
+        get() = MainViewModel::class
 
-    private lateinit var binding: ActivityMainBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this,R.layout.activity_main)
+    }
+
+    override fun getLayoutId(): Int {
+        return R.layout.activity_main
     }
 }

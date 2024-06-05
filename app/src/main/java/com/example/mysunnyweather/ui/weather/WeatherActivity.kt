@@ -1,6 +1,7 @@
 package com.example.mysunnyweather.ui.weather
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -19,22 +20,26 @@ import com.example.mysunnyweather.databinding.ActivityWeatherBinding
 import com.example.mysunnyweather.databinding.ForecastItemBinding
 import com.example.mysunnyweather.logic.Weather
 import com.example.mysunnyweather.logic.model.getSky
+import com.example.mysunnyweather.ui.BaseActivity
 import com.example.mysunnyweather.ui.viewmodel.WeatherViewModel
 import java.text.SimpleDateFormat
 import java.util.Locale
+import kotlin.reflect.KClass
 
-class WeatherActivity : AppCompatActivity() {
+class WeatherActivity : BaseActivity<WeatherViewModel,ActivityWeatherBinding>() {
+    override val viewModelClass: KClass<WeatherViewModel>
+        get() = WeatherViewModel::class
 
-    lateinit var binding: ActivityWeatherBinding
-
-    val viewModel by lazy { ViewModelProvider(this).get(WeatherViewModel::class.java) }
+    //    lateinit var binding: ActivityWeatherBinding
+//
+//    val viewModel by lazy { ViewModelProvider(this).get(WeatherViewModel::class.java) }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val decorView = window.decorView
         decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
         window.statusBarColor = Color.TRANSPARENT
 
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_weather)
+//        binding = DataBindingUtil.setContentView(this, R.layout.activity_weather)
 
         if (viewModel.locationLng.isEmpty()){
             viewModel.locationLng = intent.getStringExtra("location_lng")?:""
@@ -90,6 +95,10 @@ class WeatherActivity : AppCompatActivity() {
 
     }
 
+    override fun getLayoutId(): Int {
+        return R.layout.activity_weather
+    }
+
     fun refreshWeather() {
         viewModel.refreshWeather(viewModel.locationLng,viewModel.locationLat)
         binding.swipeRefresh.isRefreshing = true
@@ -130,6 +139,18 @@ class WeatherActivity : AppCompatActivity() {
         binding.lifeIndexLayout.carWashingText.text = lifeIndex.carWashing[0].desc
         binding.lifeIndexLayout.carWashingText.text = lifeIndex.carWashing[0].desc
         binding.weatherLayout.visibility = View.VISIBLE
+    }
+
+    companion object{
+        fun startAction(context: Context, lng: String, lat: String, placeName: String){
+            val intent = Intent(context,WeatherActivity::class.java)
+            intent.putExtra("location_lng",lng)
+            intent.putExtra("location_lat",lat)
+            intent.putExtra("place_name",placeName)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            context.startActivity(intent)
+        }
     }
 
 }
